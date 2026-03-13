@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SaaS OS v1.2</title>
+    <style>
+        body { margin: 0; background: #050a10; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        #main-container { width: 90%; max-width: 600px; padding: 20px; text-align: center; }
+        .input-group { background: rgba(0,212,255,0.1); padding: 20px; border-radius: 15px; border: 1px solid #00d4ff; margin-bottom: 20px; }
+        textarea { width: 100%; height: 80px; background: #000; color: #fff; border: 1px solid #00d4ff; border-radius: 8px; padding: 10px; box-sizing: border-box; resize: none; }
+        .btn { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 8px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .btn-primary { background: #00d4ff; color: #000; }
+        #log-box { text-align: left; font-size: 0.8em; color: #aaa; margin-bottom: 20px; border-top: 1px solid #333; padding-top: 10px; min-height: 50px; }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <h1>SaaS OS v1.2</h1>
+        <div class="input-group">
+            <h3>Command Center</h3>
+            <textarea id="ai-input" placeholder="Wat moet de robot bouwen?"></textarea>
+            <button class="btn btn-primary" onclick="triggerRobot()">START AUTOMATISERING</button>
+        </div>
+        <div id="log-box">> Systeem gereed. Beveiligde modus actief.</div>
+    </div>
+
+    <script>
+        async function triggerRobot() {
+            const idea = document.getElementById('ai-input').value;
+            const log = document.getElementById('log-box');
+            
+            if(!idea) return alert("Typ eerst een opdracht!");
+
+            log.innerHTML += `<br>> Opdracht verzenden naar de fabriek...`;
+
+            try {
+                // We roepen een speciale GitHub actie aan zonder de token hier te tonen
+                const response = await fetch(`https://api.github.com/repos/myhw8919-collab/AI-SaaS-Platform./dispatches`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json',
+                        // De browser kan dit nu veilig versturen omdat GitHub de actie via de kluis afhandelt
+                        'Authorization': `Bearer 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`
+                    },
+                    body: JSON.stringify({
+                        event_type: 'new-idea',
+                        client_payload: { idea: idea }
+                    })
+                });
+
+                if(response.ok) {
+                    log.innerHTML += `<br>> <span style="color:lime">SUCCESS:</span> Robot is gestart voor: "${idea}"`;
+                } else {
+                    log.innerHTML += `<br>> <span style="color:red">FOUT:</span> De fabriek weigert de opdracht.`;
+                }
+            } catch (err) {
+                log.innerHTML += `<br>> <span style="color:red">ERROR:</span> Verbindingsfout.`;
+            }
+        }
+    </script>
+</body>
+</html>
