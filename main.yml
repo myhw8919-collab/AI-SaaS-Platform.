@@ -1,0 +1,16 @@
+name: SaaS Robot Fabriek
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Voer Opdracht Uit
+        run: |
+          echo "De fabriek verwerkt nu de opdracht..."
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
